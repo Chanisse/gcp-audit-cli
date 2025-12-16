@@ -1,16 +1,14 @@
 # GCP Audit CLI
 
-A personal GCP auditing CLI tool for inspecting **IAM accounts**, **project-level IAM bindings**, **GKE clusters**, **GCS buckets**, **Cloud Run**, **Cloud Functions**, and **Artifact Registry**.  
+A personal GCP auditing CLI tool for inspecting **IAM**, **project-level IAM bindings**, **GKE clusters**, **GCS buckets**, **Cloud Run**, **Cloud Functions**, and **Artifact Registry**.  
 
-Designed for cloud engineers who want a quick audit of their GCP projects using **Application Default Credentials** without exposing service account keys.
-
----
+Designed for engineers who want a quick audit of their GCP projects using **Application Default Credentials** without exposing service account keys.
 
 ---
 
 ## Features
 
-- List all **custom service accounts** in a project
+- Check overprivileged **custom service accounts** in a project
 - Fetch **project-level IAM members** and split by users and service accounts
 - Map **service accounts** to assigned roles
 - Check **GKE clusters** for idle status
@@ -71,12 +69,12 @@ No idle clusters detected
 Bucket gcf-v2-sources-123456789-europe-west2 created 2024-05-21 may be unused
 
 ## Cloud Run Services
-service-1 -> europe-west1, last update: 2024-05-15, status: Active
+service-1 -> europe-west1, last update: UNKNOWN, status: Not in use
 
 ## Cloud Functions
 No Cloud Functions found
 
 ## Artifact Registry Repositories
-projects/PROJECT/locations/europe-west1/repositories/repo1 -> format: DOCKER, last update: 2024-05-01, status: Active
-projects/PROJECT/locations/europe-west1/repositories/repo2 -> format: MAVEN, last update: 2023-12-20, status: Inactive
+projects/PROJECT/locations/europe-west1/repositories/repo1 -> format: DOCKER, last update: 2025-12-15, status: Active
+projects/PROJECT/locations/europe-west1/repositories/repo2 -> format: MAVEN, last update: 2024-12-20, status: Inactive
 ```
