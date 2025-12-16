@@ -9,6 +9,7 @@ def fetch_cloud_run_services(project, idle_days=30):
     """
     Fetch all Cloud Run services across regions
     Marks services as 'Not in use' if last deployment is older than idle_days
+    or unknown
     """
     run = discovery.build('run', 'v1')
     parent = f"projects/{project}/locations/-"
@@ -20,7 +21,8 @@ def fetch_cloud_run_services(project, idle_days=30):
         for s in response.get('items', []):
             name = s['metadata']['name']
             region = s['metadata'].get('namespace', 'UNKNOWN')
-            update_time_str = s['metadata'].get('updateTime', s['metadata'].get('creationTimestamp'))
+
+            update_time_str = s.get('status', {}).get('latestReadyRevisionTime') or s['metadata'].get('creationTimestamp')
             if update_time_str:
                 try:
                     update_time = datetime.strptime(update_time_str, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
@@ -28,7 +30,9 @@ def fetch_cloud_run_services(project, idle_days=30):
                     update_time = None
             else:
                 update_time = None
-            status = "Not in use" if update_time and update_time < threshold else "Active"
+
+            status = "Not in use" if not update_time or update_time < threshold else "Active"
+
             services.append({
                 'name': name,
                 'region': region,

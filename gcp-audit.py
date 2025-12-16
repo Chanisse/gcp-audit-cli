@@ -19,6 +19,24 @@ def generate_report(project):
     report.append(f"Total service accounts: {len(accounts)}")
     report.append(f"Total IAM members: {len(members)}")
 
+    account_roles = iam.map_roles_to_accounts(accounts, members)
+
+    alerts = iam.check_overprivileged(accounts, account_roles)
+    report.append("\n### Overprivileged Service Accounts")
+    if alerts:
+        report += alerts
+    else:
+        report.append("No overprivileged service accounts found")
+
+    account_roles = iam.map_roles_to_accounts(accounts, members)
+    report.append("\n### Users & Custom Service Accounts Roles")
+    if account_roles:
+        for account, roles in account_roles.items():
+            roles_str = ", ".join(roles) if roles else "No project-level roles assigned"
+            report.append(f"{account} -> {roles_str}")
+    else:
+        report.append("No users or custom service accounts found")
+
     # GKE
     clusters = gke.fetch_gke_clusters(project)
     cluster_alerts = gke.check_idle_clusters(clusters)
